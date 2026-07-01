@@ -36,10 +36,10 @@ on a.month = b.month
 ```
 
 Скриншот к заданию 1:
-![Скриншот-1](https://github.com/netology-code/sql-hw/blob/main/img/img/1.png)
+![Скриншот-1](https://github.com/matyushevav/sql-hw/blob/main/img/1.png)
 
 Скриншот к заданию 2:
-![Скриншот-1](https://github.com/netology-code/sql-hw/blob/main/img/img/2.png)
+![Скриншот-1](https://github.com/matyushevav/sql-hw/blob/main/img/2.png)
 
 Скриншот к заданию 4:
-![Скриншот-1](https://github.com/netology-code/sql-hw/blob/main/img/img/3.png)
+![Скриншот-1](https://github.com/matyushevav/sql-hw/blob/main/img/3.png)
