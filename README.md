@@ -16,6 +16,9 @@ join
 	having count(distinct customer_id) > 300) e 
 on a.store_id = e.store_id
 
+
+
+
 -- Задание 2
 -- Получите количество фильмов, продолжительность которых больше средней продолжительности всех фильмов.
 select count(*) from sakila.film
