@@ -16,9 +16,6 @@ join
 	having count(distinct customer_id) > 300) e 
 on a.store_id = e.store_id
 
-
-
-
 -- Задание 2
 -- Получите количество фильмов, продолжительность которых больше средней продолжительности всех фильмов.
 select count(*) from sakila.film
@@ -37,3 +34,12 @@ join
 	group by monthname(rental_date)) b
 on a.month = b.month
 ```
+
+Скриншот к заданию 1:
+![Скриншот-1](https://github.com/netology-code/sql-hw/blob/main/img/1.png)
+
+Скриншот к заданию 2:
+![Скриншот-1](https://github.com/netology-code/sql-hw/blob/main/img/2.png)
+
+Скриншот к заданию 4:
+![Скриншот-1](https://github.com/netology-code/sql-hw/blob/main/img/3.png)
