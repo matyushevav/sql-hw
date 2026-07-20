@@ -51,12 +51,37 @@
 - **Шард А** — `id % 2 = 0`
 - **Шард Б** — `id % 2 = 1`
 
-## Итоговое распределение данных
+## Блок-схема
 
-| Сервер | Шард | Таблицы |
-|--------|------|---------|
-| **Сервер А** | 0 | `users_core_0`, `users_profile_0`, `books_core_0`, `books_content_0`, `shops_core_0`, `shops_inventory_0` |
-| **Сервер Б** | 1 | `users_core_1`, `users_profile_1`, `books_core_1`, `books_content_1`, `shops_core_1`, `shops_inventory_1` |
+┌─────────────────────────┐
+│ API Gateway │
+│ id % 2 = 0 → Сервер А │
+│ id % 2 = 1 → Сервер Б │
+└───────────┬─────────────┘
+│
+┌─────────────────┴─────────────────┐
+│ │
+▼ ▼
+┌───────────────────────┐ ┌───────────────────────┐
+│ Сервер А │ │ Сервер Б │
+│ (шард 0) │ │ (шард 1) │
+│ id % 2 = 0 │ │ id % 2 = 1 │
+├───────────────────────┤ ├───────────────────────┤
+│ │ │ │
+│ users_core_0 │ │ users_core_1 │
+│ users_profile_0 │ │ users_profile_1 │
+│ │ │ │
+│ books_core_0 │ │ books_core_1 │
+│ books_content_0 │ │ books_content_1 │
+│ │ │ │
+│ shops_core_0 │ │ shops_core_1 │
+│ shops_inventory_0 │ │ shops_inventory_1 │
+│ │ │ │
+├───────────────────────┤ ├───────────────────────┤
+│ Режим: │ │ Режим: │
+│ Active Master │ │ Active Master │
+│ + Read-Only Slave │ │ + Read-Only Slave │
+└───────────────────────┘ └───────────────────────┘
 
 **Режимы работы:**
 
