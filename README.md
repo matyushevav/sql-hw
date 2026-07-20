@@ -42,4 +42,24 @@
 
 **Шард 2 (Shop Inventory)** — `id`, `warehouse_id`, `stock_by_book_json`, `supplier_contacts`, `sales_statistics_json`, `profit_margin`  
 → Склад, логистика, аналитика   
-  
+
+###  2. Горизонтальный шардинг
+Каждая вертикальная часть дополнительно разбивается по строкам на 2 шарда.
+
+**Принцип шардирования:** `hash(id) % 2`
+
+- **Шард А** — `id % 2 = 0`
+- **Шард Б** — `id % 2 = 1`
+
+## Итоговое распределение данных
+
+| Сервер | Шард | Таблицы |
+|--------|------|---------|
+| **Сервер А** | 0 | `users_core_0`, `users_profile_0`, `books_core_0`, `books_content_0`, `shops_core_0`, `shops_inventory_0` |
+| **Сервер Б** | 1 | `users_core_1`, `users_profile_1`, `books_core_1`, `books_content_1`, `shops_core_1`, `shops_inventory_1` |
+
+**Режимы работы:**
+
+- **Сервер А** — Active Master (шард 0)
+- **Сервер Б** — Active Master (шард 1)
+- **У каждого мастера** — Read-Only Slave для резервирования и разгрузки чтения  
