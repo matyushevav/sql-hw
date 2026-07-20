@@ -1,45 +1,18 @@
-# Домашнее задание к занятию "`Репликация и масштабирование. Часть 2`" - `Матюшев Анатолий Владимирович`
+# Домашнее задание к занятию "Репликация и масштабирование. Часть 2"
+**Выполнил:** Матюшев Анатолий Владимирович
 
-```sql
--- Задание 1
--- Одним запросом получите информацию о магазине, в котором обслуживается более 300 покупателей, и выведите в результат следующую информацию:
--- фамилия и имя сотрудника из этого магазина;
--- город нахождения магазина;
--- количество пользователей, закреплённых в этом магазине.
-select b.last_name, b.first_name, d.city, e.customer_count from sakila.store a
-join sakila.staff b on a.manager_staff_id = b.staff_id 
-join sakila.address c on a.address_id = c.address_id 
-join sakila.city d on c.city_id = d.city_id 
-join 
-	(select store_id, count(distinct customer_id) as customer_count from sakila.customer
-	group by store_id 
-	having count(distinct customer_id) > 300) e 
-on a.store_id = e.store_id
+## Задание 1
 
--- Задание 2
--- Получите количество фильмов, продолжительность которых больше средней продолжительности всех фильмов.
-select count(*) from sakila.film
-where `length` > (select avg(length) from sakila.film)
+### Активный мастер + 1 пассивный слейв
 
+- **Отказоустойчивость** — есть резерв на случай падения мастера
+- **Разгрузка мастера** — чтение и тяжёлую аналитику можно делать на слейве
+- **Бекапы без потерь** — копирование данных делается на слейве, не нагружая мастер
+- **Простота** — легко настраивать и мониторить
 
--- Задание 3
--- Получите информацию, за какой месяц была получена наибольшая сумма платежей, и добавьте информацию по количеству аренд за этот месяц.
-select a.month, a.total_payment_sum, b.total_rental_count from
-	(select monthname(payment_date) as month, sum(amount) as total_payment_sum from sakila.payment
-	group by monthname(payment_date)
-	order by sum(amount) desc 
-	limit 1) a
-join 
-	(select monthname(rental_date) as month, count(rental_id) as total_rental_count from sakila.rental
-	group by monthname(rental_date)) b
-on a.month = b.month
-```
+### Мастер + несколько слейвов
 
-Скриншот к заданию 1:
-![Скриншот-1](https://github.com/matyushevav/sql-hw/blob/main/img/1.png)
-
-Скриншот к заданию 2:
-![Скриншот-1](https://github.com/matyushevav/sql-hw/blob/main/img/2.png)
-
-Скриншот к заданию 4:
-![Скриншот-1](https://github.com/matyushevav/sql-hw/blob/main/img/3.png)
+- **Горизонтальное масштабирование чтения** — чем больше слейвов, тем больше одновременных запросов можно выполнять
+- **Геораспределение** — слейвы в разных ЦОДах позволяет снижають задержки для удалённых пользователей
+- **Повышенная отказоустойчивость** — при выходе из строя мастера есть выбор кандидатов на повышение, при выходе из строя одного слейва система не останавливается, остальные слейвы принимают нагрузку на себя
+- **Специализация** — каждый слейв можно настроить под свою задачу (аналитика, бекап, пользовательские запросы)
